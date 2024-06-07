@@ -25,5 +25,11 @@ public class RecordServiceImpl implements RecordService {
         return recordItemRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
+    @Override
+    public Album addAlbum(Album album) {
+        return recordItemRepository.save(album);
+
+    }
+
 
 }

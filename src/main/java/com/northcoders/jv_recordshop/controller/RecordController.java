@@ -27,11 +27,16 @@ public class RecordController {
 
     @GetMapping("/by")
     @ResponseBody
-    public ResponseEntity<?> getAlbumById(@RequestParam String id){
+    public ResponseEntity<?> getAlbumById(@RequestParam String id) {
         try {
             return new ResponseEntity<>(recordService.getAlbumById(Long.parseLong(id)), HttpStatus.OK);
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return new ResponseEntity<>("Sorry, there are no albums with that ID - try again (numbers only)", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addAlbum(@RequestBody Album album) {
+        return new ResponseEntity<>(recordService.addAlbum(album), HttpStatus.CREATED);
     }
 }

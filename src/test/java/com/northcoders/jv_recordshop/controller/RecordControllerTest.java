@@ -99,9 +99,26 @@ class RecordControllerTest {
                 MockMvcResultMatchers.jsonPath("$.albumTitle").value("title1"),
                 MockMvcResultMatchers.jsonPath("$.genre").value("POP")
         );
+    }
+
+    @Test
+    @DisplayName("POST addAlbum")
+    void addAlbum() throws Exception {
+        // Arrange
+        Album album = new Album();
+        when(mockRecordService.addAlbum(album)).thenReturn(album);
+
+        // Act
+        ResultActions resultActions = this.mockMvcController.perform((MockMvcRequestBuilders.post("/api/v1/records"))
+                // set content-type header as media type of request body is json
+                .contentType(MediaType.APPLICATION_JSON)
+                // convert album object into json string and set as body
+                .content(mapper.writeValueAsString(album)));
+        // Assert
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$").value(album));
 
 
 
     }
-
 }

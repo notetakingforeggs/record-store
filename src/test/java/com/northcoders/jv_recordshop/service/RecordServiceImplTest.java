@@ -30,7 +30,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("Get all Albums - retreives record list from db")
-    void testGetAllAlbums(){
+    void testGetAllAlbums() {
         // Arrange
         List<Album> albums = List.of(new Album(), new Album(), new Album());
         when(recordItemRepository.findAll()).thenReturn(albums);
@@ -43,15 +43,32 @@ class RecordServiceTest {
         assertThat(results).isEqualTo(albums);
 
     }
+
     @Test
-    @DisplayName("Get Ablum by id")
-    void getAlbumById(){
+    @DisplayName("Get Album by id")
+    void getAlbumById() {
         // Arrange
         Album album = new Album();
         when(recordItemRepository.findById(1L)).thenReturn(Optional.of(album));
 
         // Act
         Album result = recordServiceImpl.getAlbumById(1L);
+
+        // Assert
+        assertThat(result).isEqualTo(album);
+
+
+    }
+
+    @Test
+    @DisplayName("Add Album")
+    void addAlbumTest() {
+        // Arrange
+        Album album = new Album();
+        when(recordServiceImpl.addAlbum(album)).thenReturn(album);
+
+        // Act
+        Album result = recordServiceImpl.addAlbum(album);
 
         // Assert
         assertThat(result).isEqualTo(album);
