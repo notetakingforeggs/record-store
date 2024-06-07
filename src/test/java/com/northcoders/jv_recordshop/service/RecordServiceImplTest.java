@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +41,21 @@ class RecordServiceTest {
         // Assert
         assertThat(results).hasSize(albums.size());
         assertThat(results).isEqualTo(albums);
+
+    }
+    @Test
+    @DisplayName("Get Ablum by id")
+    void getAlbumById(){
+        // Arrange
+        Album album = new Album();
+        when(recordItemRepository.findById(1L)).thenReturn(Optional.of(album));
+
+        // Act
+        Album result = recordServiceImpl.getAlbumById(1L);
+
+        // Assert
+        assertThat(result).isEqualTo(album);
+
 
     }
 

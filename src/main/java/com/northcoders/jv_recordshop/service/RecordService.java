@@ -5,5 +5,7 @@ import java.util.List;
 public interface RecordService {
 
     List<Album> getAllAlbums();
+    Album getAlbumById(Long id);
+
 
 }

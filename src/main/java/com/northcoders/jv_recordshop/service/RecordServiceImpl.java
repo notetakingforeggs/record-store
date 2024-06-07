@@ -20,4 +20,10 @@ public class RecordServiceImpl implements RecordService {
         return albumList;
     }
 
+    @Override
+    public Album getAlbumById(Long id) {
+        return recordItemRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
+
 }
