@@ -1,5 +1,6 @@
 package com.northcoders.jv_recordshop.controller;
 
+import com.northcoders.jv_recordshop.model.Album;
 import com.northcoders.jv_recordshop.service.RecordService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,7 @@ public class RecordController {
     private RecordService recordService;
 
     @GetMapping
-    public ResponseEntity<List<Record>> getRecords() {
-        // this just a standin for method call
-        List<Record> recordsList = new ArrayList<>();
-
-        return new ResponseEntity<>(recordsList, HttpStatus.OK);
-
+    public ResponseEntity<List<Album>> getRecords() {
+        return new ResponseEntity<>(recordService.getAllAlbums(), HttpStatus.OK);
     }
 }

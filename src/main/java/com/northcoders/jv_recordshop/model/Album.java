@@ -1,9 +1,6 @@
 package com.northcoders.jv_recordshop.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,7 +34,7 @@ public class Album {
 
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(updatable = false, nullable = false)
     Long id;
 
@@ -52,11 +49,5 @@ public class Album {
 
     @Column
     Year releaseYear;
-
-    @Column
-    Boolean isInStock = false;
-
-
-
 
 }
