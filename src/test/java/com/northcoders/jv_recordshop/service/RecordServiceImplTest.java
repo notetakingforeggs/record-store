@@ -152,6 +152,20 @@ class RecordServiceTest {
     @DisplayName("Get albums by genre ")
     void getAlbumsByGenreTest() {
 
+        List<Album> testInput = new ArrayList<>();
+        testInput.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1989, 1000L));
+        testInput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1901, 1500L));
+        testInput.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("ROCK"), 1999, 1300L));
+
+        List<Album> testOutput = new ArrayList<>();
+        testOutput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1901, 1500L));
+        testOutput.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("ROCK"), 1999, 1300L));
+
+        when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
+        assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByGenre("ROCK"));
+
+        verify(recordItemRepository, times(1)).findAll();
+
     }
 
     @Test
