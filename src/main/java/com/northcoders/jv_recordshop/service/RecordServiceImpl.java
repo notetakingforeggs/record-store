@@ -50,4 +50,34 @@ public class RecordServiceImpl implements RecordService {
             return recordItemRepository.save(albumToUpdate);
         } else return null;
     }
+
+    //list all albums by a given artist
+
+    public List<Album> getAlbumsByArtist(String artist) {
+        return getAllAlbums().stream()
+                .filter(a -> a.getArtist().equals(artist))
+                .toList();
+    }
+
+    //list all albums by a given release year
+    public List<Album> getAlbumsByYear(int year) {
+        return getAllAlbums().stream()
+                .filter(a -> a.getReleaseYear() == year)
+                .toList();
+    }
+
+    //list all albums by a given genre
+    public List<Album> getAlbumsByGenre(String genre) {
+        return getAllAlbums().stream()
+                .filter(a -> a.getGenre().equals(Album.Genre.valueOf(genre)))
+                .toList();
+    }
+
+    //get album information by album name
+    public List<Album> getAlbumInfoByAlbumTitle(String albumTitle) {
+        return getAllAlbums().stream()
+                .filter(s -> s.getAlbumTitle().equals(albumTitle))
+                .toList();
+    }
+
 }

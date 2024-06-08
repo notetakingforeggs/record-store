@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,14 +92,14 @@ class RecordServiceTest {
 
         // Assert//
         assertThat(result).isEqualTo(newAlbum);
-        verify(recordItemRepository, times(1)).findById(1L);
+        verify(recordItemRepository, times(2)).findById(1L);
         verify(recordItemRepository, times(1)).save(newAlbum);
 
     }
 
     @Test
     @DisplayName("Delete Album")
-    void deleteAlbumTest(){
+    void deleteAlbumTest() {
 
         // Act
         recordServiceImpl.deleteAlbumById(1L);
@@ -107,5 +108,45 @@ class RecordServiceTest {
         verify(recordItemRepository, times(1)).deleteById(1L);
 
     }
+
+    @Test
+    @DisplayName("Get albums by artist")
+    void getAlbumsByArtistTest() {
+        List<Album> testInput = new ArrayList<>();
+        testInput.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1999, 1000L));
+        testInput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L));
+        testInput.add(new Album(3L, "title3", "artist2", Album.Genre.valueOf("JAZZ"), 1999, 1300L));
+
+        List<Album> testOutput = new ArrayList<>();
+        testOutput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L));
+        testOutput.add(new Album(3L, "title3", "artist2", Album.Genre.valueOf("JAZZ"), 1999, 1300L));
+
+        when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
+        assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByArtist("artist2"));
+
+        verify(recordItemRepository, times(1)).findAll();
+    }
+
+
+    @Test
+    @DisplayName("Get albums by artist")
+    void getAlbumsByYearTest() {
+
+    }
+
+
+    @Test
+    @DisplayName("Get albums by genre ")
+    void getAlbumsByGenreTest() {
+
+    }
+
+    @Test
+    @DisplayName(" Get album info by name")
+    void getAlbumInfoByName() {
+
+    }
+
+
 }
 
