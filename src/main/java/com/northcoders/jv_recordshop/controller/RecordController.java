@@ -27,13 +27,34 @@ public class RecordController {
 
     @GetMapping("/by")
     @ResponseBody
-    public ResponseEntity<?> getAlbumById(@RequestParam String id) {
-        try {
-            return new ResponseEntity<>(recordService.getAlbumById(Long.parseLong(id)), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>("Sorry, there are no albums with that ID - try again (numbers only)", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> getAlbumById(@RequestParam(required = false) String id,
+                                          @RequestParam(required = false) String artist,
+                                          @RequestParam(required = false) String year,
+                                          @RequestParam(required = false) String genre,
+                                          @RequestParam(required = false) String title){
+        if(id!=null) {
+            try {
+                return new ResponseEntity<>(recordService.getAlbumById(Long.parseLong(id)), HttpStatus.OK);
+            } catch (RuntimeException e) {
+                return new ResponseEntity<>("Sorry, there are no albums with that ID - try again (numbers only)", HttpStatus.BAD_REQUEST);
+            }
         }
+
+        if (artist != null) {
+            return new ResponseEntity<>(recordService.getAlbumsByArtist(artist), HttpStatus.OK);
+        }
+        if (year != null) {
+            return new ResponseEntity<>(recordService.getAlbumsByYear(Integer.parseInt(year)), HttpStatus.OK);
+        }
+        if (genre != null) {
+            return new ResponseEntity<>(recordService.getAlbumsByGenre(genre), HttpStatus.OK);
+        }
+        if (title != null) {
+            return new ResponseEntity<>(recordService.getAlbumsByTitle(title), HttpStatus.OK);
+        }
+        else return getRecords();
     }
+
 
     @PostMapping
     public ResponseEntity<?> addAlbum(@RequestBody Album album) {
@@ -53,12 +74,12 @@ public class RecordController {
     }
 
     @DeleteMapping("/delete/by")
-    public ResponseEntity<?> deleteAlbumById(@RequestParam String id){
-        try{
+    public ResponseEntity<?> deleteAlbumById(@RequestParam String id) {
+        try {
             String albumName = recordService.getAlbumById(Long.parseLong(id)).getAlbumTitle();
             recordService.deleteAlbumById(Long.parseLong(id));
             return new ResponseEntity<>(albumName + " has been deleted.", HttpStatus.OK);
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>("Invalid ID", HttpStatus.BAD_REQUEST);
         }
     }

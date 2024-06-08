@@ -183,7 +183,7 @@ class RecordServiceTest {
 
         when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
 
-        assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumInfoByAlbumTitle(name));
+        assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByTitle(name));
 
         verify(recordItemRepository, times(1)).findAll();
 

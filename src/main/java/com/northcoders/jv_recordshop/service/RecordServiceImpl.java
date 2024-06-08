@@ -52,7 +52,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     //list all albums by a given artist
-
+@Override
     public List<Album> getAlbumsByArtist(String artist) {
         return getAllAlbums().stream()
                 .filter(a -> a.getArtist().equals(artist))
@@ -60,6 +60,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     //list all albums by a given release year
+    @Override
     public List<Album> getAlbumsByYear(int year) {
         return getAllAlbums().stream()
                 .filter(a -> a.getReleaseYear() == year)
@@ -67,6 +68,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     //list all albums by a given genre
+    @Override
     public List<Album> getAlbumsByGenre(String genre) {
         return getAllAlbums().stream()
                 .filter(a -> a.getGenre().equals(Album.Genre.valueOf(genre)))
@@ -74,9 +76,10 @@ public class RecordServiceImpl implements RecordService {
     }
 
     //get album information by album name
-    public List<Album> getAlbumInfoByAlbumTitle(String albumTitle) {
+    @Override
+    public List<Album> getAlbumsByTitle(String title) {
         return getAllAlbums().stream()
-                .filter(s -> s.getAlbumTitle().equals(albumTitle))
+                .filter(s -> s.getAlbumTitle().equals(title))
                 .toList();
     }
 
