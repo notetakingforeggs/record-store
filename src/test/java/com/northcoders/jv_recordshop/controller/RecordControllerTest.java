@@ -25,6 +25,7 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 // this creates a mock of the whole spring api, allowing us to send http request to the controller, without starting a full http server
@@ -76,11 +77,12 @@ class RecordControllerTest {
                 (MockMvcResultMatchers.jsonPath("$[2].artist").value("artist3"))
         );
     }
+
     @Test
     @DisplayName("Get Album by ID test")
     void testGetAlbumsById() throws Exception {
         // Arrange
-        Album album =  new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1999, 1200L);
+        Album album = new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1999, 1200L);
         when(mockRecordService.getAlbumById(1L)).thenReturn(album);
 
         // Act
@@ -127,14 +129,31 @@ class RecordControllerTest {
         // Act
         ResultActions resultActions = this.mockMvcController.perform((MockMvcRequestBuilders.put("/api/v1/records/update"))
                 .contentType(MediaType.APPLICATION_JSON)
-                        .content((mapper.writeValueAsString(updatedAlbum)))
+                .content((mapper.writeValueAsString(updatedAlbum)))
         );
         // Assert
         resultActions.andExpectAll(
-        (MockMvcResultMatchers.status().isOk()),
+                (MockMvcResultMatchers.status().isOk()),
                 (MockMvcResultMatchers.jsonPath("$.id").value(2)),
                 (MockMvcResultMatchers.jsonPath("$.albumTitle").value("title2")),
                 (MockMvcResultMatchers.jsonPath("$.artist").value("artist2")));
     }
 
+    @Test
+    @DisplayName("DELETE album  by id")
+    void deleteAblumById() throws Exception {
+        // Arrange
+        Album albumToDelete = new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L);
+        when(mockRecordService.getAlbumById(2L)).thenReturn(albumToDelete);
+        doNothing().when(mockRecordService).deleteAlbumById(2L);
+
+        // Act
+        ResultActions resultActions = this.mockMvcController.perform(MockMvcRequestBuilders.delete("/api/v1/records/delete/by?id=2"));
+
+        //Assert
+        resultActions.andExpectAll(
+                (MockMvcResultMatchers.status().isOk()),
+                (MockMvcResultMatchers.content().string("title2 has been deleted."))
+        );
+    }
 }
