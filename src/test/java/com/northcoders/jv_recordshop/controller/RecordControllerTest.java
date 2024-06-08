@@ -127,11 +127,14 @@ class RecordControllerTest {
         // Act
         ResultActions resultActions = this.mockMvcController.perform((MockMvcRequestBuilders.put("/api/v1/records/update"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content((mapper.writeValueAsString(updatedAlbum)))
+                        .content((mapper.writeValueAsString(updatedAlbum)))
         );
         // Assert
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.title").value("title2"));
+        resultActions.andExpectAll(
+        (MockMvcResultMatchers.status().isOk()),
+                (MockMvcResultMatchers.jsonPath("$.id").value(2)),
+                (MockMvcResultMatchers.jsonPath("$.albumTitle").value("title2")),
+                (MockMvcResultMatchers.jsonPath("$.artist").value("artist2")));
     }
 
 }
