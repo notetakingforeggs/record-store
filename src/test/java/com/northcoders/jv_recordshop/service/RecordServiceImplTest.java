@@ -129,10 +129,23 @@ class RecordServiceTest {
 
 
     @Test
-    @DisplayName("Get albums by artist")
+    @DisplayName("Get albums by year")
     void getAlbumsByYearTest() {
+        List<Album> testInput = new ArrayList<>();
+        testInput.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1989, 1000L));
+        testInput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L));
+        testInput.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("JAZZ"), 1999, 1300L));
 
+        List<Album> testOutput = new ArrayList<>();
+        testOutput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L));
+        testOutput.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("JAZZ"), 1999, 1300L));
+
+        when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
+        assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByYear(1999));
+
+        verify(recordItemRepository, times(1)).findAll();
     }
+
 
 
     @Test
