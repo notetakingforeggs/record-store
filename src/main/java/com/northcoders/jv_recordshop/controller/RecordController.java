@@ -39,4 +39,14 @@ public class RecordController {
     public ResponseEntity<?> addAlbum(@RequestBody Album album) {
         return new ResponseEntity<>(recordService.addAlbum(album), HttpStatus.CREATED);
     }
+
+    @PutMapping
+    public ResponseEntity<?> updateAlbum(@RequestBody Album album) {
+
+        // better to use conditionals than error catching as above?
+
+        if (recordService.updateAlbum(album) == null) {
+            return new ResponseEntity<>("No album with that ID exists", HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>(recordService.updateAlbum(album), HttpStatus.CREATED);
+    }
 }

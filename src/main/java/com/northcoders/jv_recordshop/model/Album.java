@@ -50,4 +50,6 @@ public class Album {
     @Column
     Year releaseYear;
 
+    @Column
+    Long pricePence = 1000L;
 }

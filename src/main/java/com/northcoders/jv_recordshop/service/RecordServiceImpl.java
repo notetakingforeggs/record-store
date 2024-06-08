@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class RecordServiceImpl implements RecordService {
 
@@ -31,5 +32,12 @@ public class RecordServiceImpl implements RecordService {
 
     }
 
-
+    @Override
+    public Album updateAlbum(Album album) {
+        if( recordItemRepository.findById(album.getId()).isPresent()){
+            recordItemRepository.deleteById(album.getId());
+            return recordItemRepository.save(album);
+            //return recordItemRepository.findById(album.getId()).get();
+        }else return null;
+    }
 }

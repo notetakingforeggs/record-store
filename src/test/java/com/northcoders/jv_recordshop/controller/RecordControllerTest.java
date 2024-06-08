@@ -59,9 +59,9 @@ class RecordControllerTest {
     void getRecords() throws Exception {
         // Arrange
         List<Album> albumList = new ArrayList<>();
-        albumList.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), Year.of(1999)));
-        albumList.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), Year.of(1999)));
-        albumList.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("JAZZ"), Year.of(1999)));
+        albumList.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), Year.of(1999), 1000L));
+        albumList.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), Year.of(1999), 1500L));
+        albumList.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("JAZZ"), Year.of(1999), 1300L));
 
         when(mockRecordService.getAllAlbums()).thenReturn(albumList);
         // horrific misstep of not noticing title is albumtitle debugging - keeping for future reference
@@ -82,7 +82,7 @@ class RecordControllerTest {
     @DisplayName("Get Album by ID test")
     void testGetAlbumsById() throws Exception {
         // Arrange
-        Album album =  new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), Year.of(1999));
+        Album album =  new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), Year.of(1999), 1200L);
         when(mockRecordService.getAlbumById(1L)).thenReturn(album);
 
         // Act

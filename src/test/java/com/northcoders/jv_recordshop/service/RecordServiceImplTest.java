@@ -15,8 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.internal.configuration.GlobalConfiguration.validate;
 
 @DataJpaTest
 class RecordServiceTest {
@@ -41,6 +43,7 @@ class RecordServiceTest {
         // Assert
         assertThat(results).hasSize(albums.size());
         assertThat(results).isEqualTo(albums);
+        verify(recordItemRepository, times(1)).findAll();
 
     }
 
@@ -56,6 +59,7 @@ class RecordServiceTest {
 
         // Assert
         assertThat(result).isEqualTo(album);
+        verify(recordItemRepository, times(1)).findById(1L);
 
 
     }
@@ -65,16 +69,37 @@ class RecordServiceTest {
     void addAlbumTest() {
         // Arrange
         Album album = new Album();
-        when(recordServiceImpl.addAlbum(album)).thenReturn(album);
+        when(recordItemRepository.save(album)).thenReturn(album);
 
         // Act
         Album result = recordServiceImpl.addAlbum(album);
 
         // Assert
         assertThat(result).isEqualTo(album);
-
+        verify(recordItemRepository, times(1)).save(album);
 
     }
 
+    @Test
+    @DisplayName("Update Album")
+    void updateAlbumTest() {
+        // Arrange
+        Album oldAlbum = new Album();
+        oldAlbum.setId(1L);
+
+        Album newAlbum = new Album();
+        newAlbum.setId(1L);
+        when(recordItemRepository.findById(1L)).thenReturn(Optional.of(oldAlbum));
+        when(recordItemRepository.save(newAlbum)).thenReturn(newAlbum);
+
+        // Act
+        Album result = recordServiceImpl.updateAlbum(newAlbum);
+
+        // Assert//
+        assertThat(result).isEqualTo(newAlbum);
+        verify(recordItemRepository, times(1)).findById(1L);
+        verify(recordItemRepository, times(1)).save(newAlbum);
+
+    }
 }
 

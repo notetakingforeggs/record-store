@@ -7,5 +7,6 @@ public interface RecordService {
     List<Album> getAllAlbums();
     Album getAlbumById(Long id);
     Album addAlbum(Album album);
+    Album updateAlbum(Album album);
 
 }
