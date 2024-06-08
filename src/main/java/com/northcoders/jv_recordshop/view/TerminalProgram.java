@@ -1,5 +1,6 @@
 package com.northcoders.jv_recordshop.view;
 
+import com.northcoders.jv_recordshop.controller.RecordController;
 import nonapi.io.github.classgraph.json.JSONUtils;
 
 import java.awt.*;
@@ -13,6 +14,7 @@ public class TerminalProgram {
         Scanner scanner = new Scanner(System.in);
 
         while (!ended) {
+             RecordController recordController = new RecordController();
             new Menu().menu();
             int choice;
             try {
@@ -21,19 +23,21 @@ public class TerminalProgram {
 
                 switch (choice) {
                     case 1 -> {
-
-
+                        // view all records
+                        recordController.getRecords().getBody().stream().forEach(System.out::println);
                     }
                     case 2 -> {
-
+                    new SearchRecordsBy().searchRecordsBy(scanner, recordController);
                     }
                     case 3 -> {
-
+                        System.out.println("Please input the ID of the record to delete");
+                        String id = scanner.nextLine();
+                        recordController.deleteAlbumById(id);
                     }
                     case 4 -> {
+                        System.out.println("Please paste into the terminal the JSON representation of the completed edit you would like to execute");
 
                     }
-
                     case 5 -> {
 
                     }
