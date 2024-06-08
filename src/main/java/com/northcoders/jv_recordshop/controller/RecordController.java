@@ -46,7 +46,6 @@ public class RecordController {
         // better to use conditionals than error catching as above?
 
         if (recordService.updateAlbum(album) != null) {
-            System.out.println(new ObjectMapper().writeValueAsString("Album is " + album));
             return new ResponseEntity<>(recordService.updateAlbum(album), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("No album with that ID exists", HttpStatus.BAD_REQUEST);

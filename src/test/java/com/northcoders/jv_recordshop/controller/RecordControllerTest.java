@@ -153,7 +153,7 @@ class RecordControllerTest {
         //Assert
         resultActions.andExpectAll(
                 (MockMvcResultMatchers.status().isOk()),
-                (MockMvcResultMatchers.content().string("title2 has been deleted."))
+                (MockMvcResultMatchers.content().string("title 2 has been deleted"))
         );
     }
 }

@@ -33,15 +33,21 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public void deleteAlbumById(Long Id){
+    public void deleteAlbumById(Long Id) {
         recordItemRepository.deleteById(Id);
     }
 
     @Override
     public Album updateAlbum(Album album) {
-        if( recordItemRepository.findById(album.getId()).isPresent()){
-            recordItemRepository.deleteById(album.getId());
-            return recordItemRepository.save(album);
-        }else return null;
+        if (recordItemRepository.findById(album.getId()).isPresent()) {
+            Album albumToUpdate = recordItemRepository.findById(album.getId()).get();
+            albumToUpdate.setPricePence(album.getPricePence());
+            albumToUpdate.setAlbumTitle(album.getAlbumTitle());
+            albumToUpdate.setGenre(album.getGenre());
+            albumToUpdate.setReleaseYear(album.getReleaseYear());
+            albumToUpdate.setArtist(album.getArtist());
+
+            return recordItemRepository.save(albumToUpdate);
+        } else return null;
     }
 }
