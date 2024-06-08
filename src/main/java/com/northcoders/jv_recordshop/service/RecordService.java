@@ -5,8 +5,9 @@ import java.util.List;
 public interface RecordService {
 
     List<Album> getAllAlbums();
-    Album getAlbumById(Long id);
+    Album getAlbumById(Long Id);
     Album addAlbum(Album album);
     Album updateAlbum(Album album);
+    void deleteAlbumById(Long Id);
 
 }

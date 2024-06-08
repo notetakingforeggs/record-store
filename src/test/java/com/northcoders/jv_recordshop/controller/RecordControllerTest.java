@@ -1,10 +1,10 @@
 package com.northcoders.jv_recordshop.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.northcoders.jv_recordshop.model.Album;
 import com.northcoders.jv_recordshop.service.RecordServiceImpl;
-import org.aspectj.lang.annotation.Before;
-import org.hibernate.grammars.hql.HqlParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,7 +25,6 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 // this creates a mock of the whole spring api, allowing us to send http request to the controller, without starting a full http server
@@ -51,7 +49,7 @@ class RecordControllerTest {
     @BeforeEach
     public void setUp() {
         mockMvcController = MockMvcBuilders.standaloneSetup(recordController).build();
-        mapper = new ObjectMapper();
+        mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     }
 
     @Test
@@ -59,9 +57,9 @@ class RecordControllerTest {
     void getRecords() throws Exception {
         // Arrange
         List<Album> albumList = new ArrayList<>();
-        albumList.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), Year.of(1999), 1000L));
-        albumList.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), Year.of(1999), 1500L));
-        albumList.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("JAZZ"), Year.of(1999), 1300L));
+        albumList.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1999, 1000L));
+        albumList.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L));
+        albumList.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("JAZZ"), 1999, 1300L));
 
         when(mockRecordService.getAllAlbums()).thenReturn(albumList);
         // horrific misstep of not noticing title is albumtitle debugging - keeping for future reference
@@ -82,7 +80,7 @@ class RecordControllerTest {
     @DisplayName("Get Album by ID test")
     void testGetAlbumsById() throws Exception {
         // Arrange
-        Album album =  new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), Year.of(1999), 1200L);
+        Album album =  new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1999, 1200L);
         when(mockRecordService.getAlbumById(1L)).thenReturn(album);
 
         // Act
@@ -118,7 +116,22 @@ class RecordControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$").value(album));
 
-
-
     }
+
+    @Test
+    @DisplayName("PUT updateAlbum")
+    void updateAlbum() throws Exception {
+        // Arrange
+        Album updatedAlbum = new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L);
+        when(mockRecordService.updateAlbum(updatedAlbum)).thenReturn(updatedAlbum);
+        // Act
+        ResultActions resultActions = this.mockMvcController.perform((MockMvcRequestBuilders.put("/api/v1/records/update"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content((mapper.writeValueAsString(updatedAlbum)))
+        );
+        // Assert
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.title").value("title2"));
+    }
+
 }

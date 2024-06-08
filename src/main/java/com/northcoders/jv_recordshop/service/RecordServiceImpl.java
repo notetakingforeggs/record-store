@@ -22,8 +22,8 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public Album getAlbumById(Long id) {
-        return recordItemRepository.findById(id).orElseThrow(RuntimeException::new);
+    public Album getAlbumById(Long ID) {
+        return recordItemRepository.findById(ID).orElseThrow(RuntimeException::new);
     }
 
     @Override
@@ -33,11 +33,15 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    public void deleteAlbumById(Long Id){
+        recordItemRepository.deleteById(Id);
+    }
+
+    @Override
     public Album updateAlbum(Album album) {
         if( recordItemRepository.findById(album.getId()).isPresent()){
             recordItemRepository.deleteById(album.getId());
             return recordItemRepository.save(album);
-            //return recordItemRepository.findById(album.getId()).get();
         }else return null;
     }
 }

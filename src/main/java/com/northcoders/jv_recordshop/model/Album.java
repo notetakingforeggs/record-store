@@ -48,7 +48,7 @@ public class Album {
     Genre genre;
 
     @Column
-    Year releaseYear;
+    int releaseYear;
 
     @Column
     Long pricePence = 1000L;

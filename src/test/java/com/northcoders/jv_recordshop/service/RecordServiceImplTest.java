@@ -3,22 +3,16 @@ package com.northcoders.jv_recordshop.service;
 import com.northcoders.jv_recordshop.model.Album;
 import org.junit.jupiter.api.Test;
 import com.northcoders.jv_recordshop.repository.RecordItemRepository;
-import com.northcoders.jv_recordshop.service.RecordServiceImpl;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.any;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.internal.configuration.GlobalConfiguration.validate;
 
 @DataJpaTest
 class RecordServiceTest {
@@ -99,6 +93,18 @@ class RecordServiceTest {
         assertThat(result).isEqualTo(newAlbum);
         verify(recordItemRepository, times(1)).findById(1L);
         verify(recordItemRepository, times(1)).save(newAlbum);
+
+    }
+
+    @Test
+    @DisplayName("Delete Album")
+    void deleteAlbumTest(){
+
+        // Act
+        recordServiceImpl.deleteAlbumById(1L);
+
+        // Assert
+        verify(recordItemRepository, times(1)).deleteById(1L);
 
     }
 }
