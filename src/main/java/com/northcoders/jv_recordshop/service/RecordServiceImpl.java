@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class RecordServiceImpl implements RecordService {
@@ -17,16 +18,18 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public List<Album> getAllAlbums() {
-        System.out.println("3");
         List<Album> albumList = new ArrayList<>();
         recordItemRepository.findAll().forEach(albumList::add);
-        System.out.println("4");
         return albumList;
     }
 
     @Override
     public Album getAlbumById(Long ID) {
-        return recordItemRepository.findById(ID).orElseThrow(RuntimeException::new);
+    try {
+        return recordItemRepository.findById(ID).get();
+    }catch (IllegalArgumentException | NoSuchElementException e){
+        return null;
+    }
     }
 
     @Override

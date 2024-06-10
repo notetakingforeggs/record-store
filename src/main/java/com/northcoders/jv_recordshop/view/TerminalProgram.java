@@ -117,7 +117,7 @@ public class TerminalProgram {
             String prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
             System.out.println(prettyJson);
         } catch (JsonProcessingException e) {
-            System.out.println("issue parsing text as json");
+            System.out.println(string);
         }
 
     }

@@ -28,7 +28,6 @@ public class RecordController {
 
     @GetMapping
     public ResponseEntity<List<Album>> getRecords() {
-        System.out.println("2");
         return new ResponseEntity<>(recordService.getAllAlbums(), HttpStatus.OK);
     }
 
@@ -40,10 +39,10 @@ public class RecordController {
                                           @RequestParam(required = false) String genre,
                                           @RequestParam(required = false) String title) {
         if (id != null) {
-            try {
-                return new ResponseEntity<>(recordService.getAlbumById(Long.parseLong(id)), HttpStatus.OK);
-            } catch (RuntimeException e) {
+            if (recordService.getAlbumById(Long.parseLong(id)) == null) {
                 return new ResponseEntity<>("Sorry, there are no albums with that ID - try again (numbers only)", HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>(recordService.getAlbumById(Long.parseLong(id)), HttpStatus.OK);
             }
         }
 
@@ -64,9 +63,9 @@ public class RecordController {
 
         }
         if (title != null) {
-            if (recordService.getAlbumsByTitle(title).isEmpty()){
+            if (recordService.getAlbumsByTitle(title).isEmpty()) {
                 return new ResponseEntity<>(new ArrayList<>(List.of("No albums titled " + title)), HttpStatus.BAD_REQUEST);
-            }else return new ResponseEntity<>(recordService.getAlbumsByTitle(title), HttpStatus.OK);
+            } else return new ResponseEntity<>(recordService.getAlbumsByTitle(title), HttpStatus.OK);
         } else return getRecords();
     }
 
@@ -110,11 +109,9 @@ public class RecordController {
     }
 
     @GetMapping("/health")
-    public ResponseEntity<String> health(){
+    public ResponseEntity<String> health() {
         return ResponseEntity.ok("everyting good,eeveryting nice");
     }
-
-
 
     public AlbumDTO convertAlbumToDTO(Album album) {
         return modelMapper.map(album, AlbumDTO.class);
