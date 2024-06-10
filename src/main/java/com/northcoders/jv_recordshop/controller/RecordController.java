@@ -112,6 +112,7 @@ public class RecordController {
         return new ResponseEntity<>("All albums deleted.", HttpStatus.OK);
     }
 
+    @
 
     public AlbumDTO convertAlbumToDTO(Album album) {
         return mapper.map(album, AlbumDTO.class);
@@ -120,4 +121,6 @@ public class RecordController {
     public Album convertAlbumDTOToAlbum(AlbumDTO albumDTO) {
         return mapper.map(albumDTO, Album.class);
     }
+
+
 }

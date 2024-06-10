@@ -21,5 +21,6 @@ base_url="http://localhost:8080/api/v1/records"
 for album in "${albumsList[@]}"; do
     echo "Sending JSON body: $album"
     curl -s -X POST "$base_url" -H "Content-Type: application/json" -d "$album"
-    echo # Add a new line for separation
+    echo
+
 done
