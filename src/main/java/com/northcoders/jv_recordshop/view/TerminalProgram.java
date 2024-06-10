@@ -2,13 +2,7 @@ package com.northcoders.jv_recordshop.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.northcoders.jv_recordshop.controller.RecordController;
 import com.northcoders.jv_recordshop.service.RecordServiceImpl;
-import nonapi.io.github.classgraph.json.JSONUtils;
-import org.apache.catalina.connector.Response;
-import org.apache.catalina.mapper.Mapper;
-
-import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -44,14 +38,21 @@ public class TerminalProgram {
                         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                         prettyPrint(response.body());
                     }
-//                    case 2 -> {
-//                        new SearchRecordsBy().searchRecordsBy(scanner, recordController);
-//                    }
-//                    case 3 -> {
-//                        System.out.println("Please input the ID of the record to delete");
-//                        String id = scanner.nextLine();
-//                        recordController.deleteAlbumById(id);
-//                    }
+                    case 2 -> {
+
+                        new SearchRecordsBy().searchRecordsBy(scanner);
+                    }
+                    case 3 -> {
+                        HttpClient client = HttpClient.newHttpClient();
+
+                        HttpRequest request = HttpRequest.newBuilder()
+                                .uri(URI.create("http://127.0.0.1:8080/api/v1/records"))
+                                .DELETE()
+                                .build();
+
+                        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                        prettyPrint(response.body());
+                    }
                     case 4 -> {
                         System.out.println("Please paste into the terminal the JSON representation of the completed edit you would like to execute");
 
