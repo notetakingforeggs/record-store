@@ -1,5 +1,7 @@
 package com.northcoders.jv_recordshop.view;
 
+import com.northcoders.jv_recordshop.model.Genre;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -36,8 +38,29 @@ public class SearchRecordsBy {
             }
             case 3 -> {
                 searchingBy = "genre";
-                promptUserForInput(searchingBy);
-                getRecordsBy(searchingBy, scanner.nextLine());
+
+                boolean isValidGenre = false;
+                while (!isValidGenre) {
+                    promptUserForInput(searchingBy);
+                    String genreString = scanner.nextLine();
+                    try {
+                        Genre.valueOf(genreString.toUpperCase());
+                        getRecordsBy(searchingBy, genreString.toUpperCase());
+                        isValidGenre = true;
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("""
+                                the current genres we have in stock are:
+                                    HIPHOP,
+                                    ROCK,
+                                    CLASSICAL,
+                                    JAZZ,
+                                    AMBIENT,
+                                    EXPERIMENTAL,
+                                    ELECTRONIC,
+                                    POP
+                                """);
+                    }
+                }
             }
             case 4 -> {
                 searchingBy = "year";
