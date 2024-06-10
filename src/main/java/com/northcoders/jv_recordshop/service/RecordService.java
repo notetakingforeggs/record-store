@@ -13,5 +13,5 @@ public interface RecordService {
     Album addAlbum(Album album);
     Album updateAlbum(Album album);
     void deleteAlbumById(Long Id);
-
+    void deleteAllAlbums();
 }

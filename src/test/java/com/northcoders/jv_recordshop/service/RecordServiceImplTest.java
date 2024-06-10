@@ -1,6 +1,7 @@
 package com.northcoders.jv_recordshop.service;
 
 import com.northcoders.jv_recordshop.model.Album;
+import com.northcoders.jv_recordshop.model.Genre;
 import org.junit.jupiter.api.Test;
 import com.northcoders.jv_recordshop.repository.RecordItemRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -113,13 +114,13 @@ class RecordServiceTest {
     @DisplayName("Get albums by artist")
     void getAlbumsByArtistTest() {
         List<Album> testInput = new ArrayList<>();
-        testInput.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1999, 1000L));
-        testInput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L));
-        testInput.add(new Album(3L, "title3", "artist2", Album.Genre.valueOf("JAZZ"), 1999, 1300L));
+        testInput.add(new Album(1L, "title1", "artist1", Genre.valueOf("POP"), 1999, 1000L));
+        testInput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1999, 1500L));
+        testInput.add(new Album(3L, "title3", "artist2", Genre.valueOf("JAZZ"), 1999, 1300L));
 
         List<Album> testOutput = new ArrayList<>();
-        testOutput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L));
-        testOutput.add(new Album(3L, "title3", "artist2", Album.Genre.valueOf("JAZZ"), 1999, 1300L));
+        testOutput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1999, 1500L));
+        testOutput.add(new Album(3L, "title3", "artist2", Genre.valueOf("JAZZ"), 1999, 1300L));
 
         when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
         assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByArtist("artist2"));
@@ -132,13 +133,13 @@ class RecordServiceTest {
     @DisplayName("Get albums by year")
     void getAlbumsByYearTest() {
         List<Album> testInput = new ArrayList<>();
-        testInput.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1989, 1000L));
-        testInput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L));
-        testInput.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("JAZZ"), 1999, 1300L));
+        testInput.add(new Album(1L, "title1", "artist1", Genre.valueOf("POP"), 1989, 1000L));
+        testInput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1999, 1500L));
+        testInput.add(new Album(3L, "title3", "artist3", Genre.valueOf("JAZZ"), 1999, 1300L));
 
         List<Album> testOutput = new ArrayList<>();
-        testOutput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1999, 1500L));
-        testOutput.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("JAZZ"), 1999, 1300L));
+        testOutput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1999, 1500L));
+        testOutput.add(new Album(3L, "title3", "artist3", Genre.valueOf("JAZZ"), 1999, 1300L));
 
         when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
         assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByYear(1999));
@@ -153,13 +154,13 @@ class RecordServiceTest {
     void getAlbumsByGenreTest() {
 
         List<Album> testInput = new ArrayList<>();
-        testInput.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1989, 1000L));
-        testInput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1901, 1500L));
-        testInput.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("ROCK"), 1999, 1300L));
+        testInput.add(new Album(1L, "title1", "artist1", Genre.valueOf("POP"), 1989, 1000L));
+        testInput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1901, 1500L));
+        testInput.add(new Album(3L, "title3", "artist3", Genre.valueOf("ROCK"), 1999, 1300L));
 
         List<Album> testOutput = new ArrayList<>();
-        testOutput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1901, 1500L));
-        testOutput.add(new Album(3L, "title3", "artist3", Album.Genre.valueOf("ROCK"), 1999, 1300L));
+        testOutput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1901, 1500L));
+        testOutput.add(new Album(3L, "title3", "artist3", Genre.valueOf("ROCK"), 1999, 1300L));
 
         when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
         assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByGenre("ROCK"));
@@ -173,13 +174,13 @@ class RecordServiceTest {
     void getAlbumInfoByName() {
         String name = "title2";
         List<Album> testInput = new ArrayList<>();
-        testInput.add(new Album(1L, "title1", "artist1", Album.Genre.valueOf("POP"), 1989, 1000L));
-        testInput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1901, 1500L));
-        testInput.add(new Album(3L, "title2", "artist3", Album.Genre.valueOf("ROCK"), 1999, 1300L));
+        testInput.add(new Album(1L, "title1", "artist1", Genre.valueOf("POP"), 1989, 1000L));
+        testInput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1901, 1500L));
+        testInput.add(new Album(3L, "title2", "artist3", Genre.valueOf("ROCK"), 1999, 1300L));
 
         List<Album> testOutput = new ArrayList<>();
-        testOutput.add(new Album(2L, "title2", "artist2", Album.Genre.valueOf("ROCK"), 1901, 1500L));
-        testOutput.add(new Album(3L, "title2", "artist3", Album.Genre.valueOf("ROCK"), 1999, 1300L));
+        testOutput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1901, 1500L));
+        testOutput.add(new Album(3L, "title2", "artist3", Genre.valueOf("ROCK"), 1999, 1300L));
 
         when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
 

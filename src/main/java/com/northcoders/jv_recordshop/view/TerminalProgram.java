@@ -65,7 +65,6 @@ public class TerminalProgram {
                         }
                         System.out.println(requestBody.toString());
 
-                        System.out.println("out of loop");
                         HttpRequest request = HttpRequest.newBuilder()
                                 .uri(URI.create("http://127.0.0.1:8080/api/v1/records"))
                                 .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))

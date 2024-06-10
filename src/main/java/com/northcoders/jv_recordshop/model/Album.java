@@ -21,17 +21,6 @@ import java.time.Year;
 
 public class Album {
 
-    public enum Genre{
-        HIPHOP,
-        ROCK,
-        CLASSICAL,
-        JAZZ,
-        AMBIENT,
-        EXPERIMENTAL,
-        ELECTRONIC,
-        POP
-    }
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,5 +1,6 @@
 package com.northcoders.jv_recordshop.service;
 
+import com.northcoders.jv_recordshop.model.Genre;
 import com.northcoders.jv_recordshop.repository.RecordItemRepository;
 import com.northcoders.jv_recordshop.model.Album;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public List<Album> getAlbumsByGenre(String genre) {
         return getAllAlbums().stream()
-                .filter(a -> a.getGenre().equals(Album.Genre.valueOf(genre)))
+                .filter(a -> a.getGenre().equals(Genre.valueOf(genre)))
                 .toList();
     }
 
@@ -81,6 +82,11 @@ public class RecordServiceImpl implements RecordService {
         return getAllAlbums().stream()
                 .filter(s -> s.getAlbumTitle().equals(title))
                 .toList();
+    }
+
+    @Override
+    public void deleteAllAlbums(){
+        recordItemRepository.deleteAll();
     }
 
 }

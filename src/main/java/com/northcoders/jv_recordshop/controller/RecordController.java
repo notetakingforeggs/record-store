@@ -2,10 +2,15 @@ package com.northcoders.jv_recordshop.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.northcoders.jv_recordshop.DTO.AlbumDTO;
+import com.northcoders.jv_recordshop.mapper.ModelMapperConfig;
 import com.northcoders.jv_recordshop.model.Album;
 import com.northcoders.jv_recordshop.service.RecordService;
 //import jdk.swing.interop.SwingInterOpUtils;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +25,9 @@ public class RecordController {
     @Autowired
     private RecordService recordService;
 
+    @Autowired
+    private ModelMapper mapper;
+
     @GetMapping
     public ResponseEntity<List<Album>> getRecords() {
         return new ResponseEntity<>(recordService.getAllAlbums(), HttpStatus.OK);
@@ -31,8 +39,8 @@ public class RecordController {
                                           @RequestParam(required = false) String artist,
                                           @RequestParam(required = false) String year,
                                           @RequestParam(required = false) String genre,
-                                          @RequestParam(required = false) String title){
-        if(id!=null) {
+                                          @RequestParam(required = false) String title) {
+        if (id != null) {
             try {
                 return new ResponseEntity<>(recordService.getAlbumById(Long.parseLong(id)), HttpStatus.OK);
             } catch (RuntimeException e) {
@@ -51,14 +59,15 @@ public class RecordController {
         }
         if (title != null) {
             return new ResponseEntity<>(recordService.getAlbumsByTitle(title), HttpStatus.OK);
-        }
-        else return getRecords();
+        } else return getRecords();
     }
 
 
     @PostMapping
-    public ResponseEntity<?> addAlbum(@RequestBody Album album) {
-        return new ResponseEntity<>(recordService.addAlbum(album), HttpStatus.CREATED);
+    public ResponseEntity<?> addAlbum(@Valid @RequestBody AlbumDTO albumDTO) {
+        Album album = convertAlbumDTOToAlbum(albumDTO);
+        AlbumDTO returnDTO = convertAlbumToDTO(recordService.addAlbum(album));
+        return new ResponseEntity<>(returnDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
@@ -82,5 +91,20 @@ public class RecordController {
         } catch (Exception e) {
             return new ResponseEntity<>("Invalid ID", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteAll() {
+            recordService.deleteAllAlbums();
+            return new ResponseEntity<>("All albums deleted.", HttpStatus.OK);
+    }
+
+
+    public AlbumDTO convertAlbumToDTO(Album album) {
+        return mapper.map(album, AlbumDTO.class);
+    }
+
+    public Album convertAlbumDTOToAlbum(AlbumDTO albumDTO) {
+        return mapper.map(albumDTO, Album.class);
     }
 }
