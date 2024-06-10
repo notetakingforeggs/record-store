@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -22,13 +23,13 @@ public class AlbumDTO {
 
         Long id;
 
-        @NotNull(message = "Album must have a Title.")
+        @NotBlank(message = "Album must have a Title.")
         String albumTitle;
 
-        @NotNull(message = "Album must have an artist")
+        @NotBlank(message = "Album must have an artist")
         String artist;
 
-        @NotNull(message = "album must have a genre")
+
         Genre genre;
 
         @NotNull(message = "album must have a realease year")

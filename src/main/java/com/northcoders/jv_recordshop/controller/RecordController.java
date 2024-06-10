@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.northcoders.jv_recordshop.DTO.AlbumDTO;
 import com.northcoders.jv_recordshop.mapper.ModelMapperConfig;
 import com.northcoders.jv_recordshop.model.Album;
+import com.northcoders.jv_recordshop.model.Genre;
 import com.northcoders.jv_recordshop.service.RecordService;
 //import jdk.swing.interop.SwingInterOpUtils;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -49,34 +51,45 @@ public class RecordController {
         }
 
         if (artist != null) {
-            return new ResponseEntity<>(recordService.getAlbumsByArtist(artist), HttpStatus.OK);
+            if (recordService.getAlbumsByArtist(artist).isEmpty()) {
+                return new ResponseEntity<>(new ArrayList<>(List.of("No albums by " + artist)), HttpStatus.BAD_REQUEST);
+            } else return new ResponseEntity<>(recordService.getAlbumsByArtist(artist), HttpStatus.OK);
         }
         if (year != null) {
-            return new ResponseEntity<>(recordService.getAlbumsByYear(Integer.parseInt(year)), HttpStatus.OK);
+            if (recordService.getAlbumsByYear(Integer.parseInt(year)).isEmpty()) {
+                return new ResponseEntity<>(new ArrayList<>(List.of("No albums from " + year)), HttpStatus.BAD_REQUEST);
+            } else return new ResponseEntity<>(recordService.getAlbumsByYear(Integer.parseInt(year)), HttpStatus.OK);
         }
         if (genre != null) {
-            return new ResponseEntity<>(recordService.getAlbumsByGenre(genre), HttpStatus.OK);
+            if (recordService.getAlbumsByGenre(genre).isEmpty()) {
+                return new ResponseEntity<>(new ArrayList<>(List.of("No albums in genre: " + genre)), HttpStatus.BAD_REQUEST);
+            } else return new ResponseEntity<>(recordService.getAlbumsByGenre(genre), HttpStatus.OK);
+
         }
         if (title != null) {
-            return new ResponseEntity<>(recordService.getAlbumsByTitle(title), HttpStatus.OK);
+            if (recordService.getAlbumsByTitle(title).isEmpty()){
+                return new ResponseEntity<>(new ArrayList<>(List.of("No albums titled " + title)), HttpStatus.BAD_REQUEST);
+            }else return new ResponseEntity<>(recordService.getAlbumsByTitle(title), HttpStatus.OK);
         } else return getRecords();
     }
 
 
     @PostMapping
     public ResponseEntity<?> addAlbum(@Valid @RequestBody AlbumDTO albumDTO) {
+
         Album album = convertAlbumDTOToAlbum(albumDTO);
         AlbumDTO returnDTO = convertAlbumToDTO(recordService.addAlbum(album));
         return new ResponseEntity<>(returnDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateAlbum(@RequestBody Album album) throws JsonProcessingException {
+    public ResponseEntity<?> updateAlbum(@RequestBody AlbumDTO albumDTO) throws JsonProcessingException {
 
         // better to use conditionals than error catching as above?
-
+        Album album = convertAlbumDTOToAlbum(albumDTO);
         if (recordService.updateAlbum(album) != null) {
-            return new ResponseEntity<>(recordService.updateAlbum(album), HttpStatus.OK);
+            AlbumDTO returnDTO = convertAlbumToDTO(recordService.updateAlbum(album));
+            return new ResponseEntity<>(returnDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("No album with that ID exists", HttpStatus.BAD_REQUEST);
         }
@@ -95,8 +108,8 @@ public class RecordController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteAll() {
-            recordService.deleteAllAlbums();
-            return new ResponseEntity<>("All albums deleted.", HttpStatus.OK);
+        recordService.deleteAllAlbums();
+        return new ResponseEntity<>("All albums deleted.", HttpStatus.OK);
     }
 
 

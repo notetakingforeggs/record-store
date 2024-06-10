@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Array of JSON bodies
+albumsList=(
+  '{"albumTitle": "ATLiens", "artist": "Outkast", "genre": "HIPHOP", "releaseYear": 1996, "pricePence": 2000}'
+  '{"albumTitle": "Kind Of Blue", "artist": "Miles Davis", "genre": "JAZZ", "releaseYear": 1956, "pricePence": 3000}'
+  '{"albumTitle": "The Chronic", "artist": "Dr Dre", "genre": "HIPHOP", "releaseYear": 2001, "pricePence": 1200}'
+  '{"albumTitle": "Peter and the Wolf", "artist": "Sergei Prokofievs", "genre": "CLASSICAL", "releaseYear": 1939, "pricePence": 2000}'
+  '{"albumTitle": "Harvest Time", "artist": "Pharoah Saunders", "genre": "JAZZ", "releaseYear": 1977, "pricePence": 2700}'
+  '{"albumTitle": "Toxicity", "artist": "System of a Down", "genre": "ROCK", "releaseYear": 2001, "pricePence": 1400}'
+  '{"albumTitle": "When We All Fall Asleep, Where Do We Go?", "artist": "Billie Eilish", "genre": "POP", "releaseYear": 2019, "pricePence": 1400}'
+  '{"albumTitle": "New Forms", "artist": "Roni Size", "genre": "ELECTRONIC", "releaseYear": 1997, "pricePence": 2000}'
+  '{"albumTitle": "Selected Ambient Works 85-92", "artist": "Aphex Twin", "genre": "AMBIENT", "releaseYear": 1992, "pricePence": 1500}'
+  '{"albumTitle": "Aquemini", "artist": "Outkast", "genre": "HIPHOP", "releaseYear": 1998, "pricePence": 1200}'
+)
+
+# Base URL
+base_url="http://localhost:8080/api/v1/records"
+
+# Loop through JSON bodies and send curl requests
+for album in "${albumsList[@]}"; do
+    echo "Sending JSON body: $album"
+    curl -s -X POST "$base_url" -H "Content-Type: application/json" -d "$album"
+    echo # Add a new line for separation
+done
