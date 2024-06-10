@@ -109,6 +109,11 @@ public class RecordController {
         return new ResponseEntity<>("All albums deleted.", HttpStatus.OK);
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<String> health(){
+        return ResponseEntity.ok("everyting good,eeveryting nice");
+    }
+
 
 
     public AlbumDTO convertAlbumToDTO(Album album) {
