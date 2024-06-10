@@ -53,7 +53,7 @@ public class RecordController {
         }
         if (year != null) {
             if (recordService.getAlbumsByYear(Integer.parseInt(year)).isEmpty()) {
-                return new ResponseEntity<>(new ArrayList<>(List.of("No albums from " + year)), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new ArrayList<>(List.of("No albums from the year" + year)), HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<>(recordService.getAlbumsByYear(Integer.parseInt(year)), HttpStatus.OK);
         }
         if (genre != null) {
