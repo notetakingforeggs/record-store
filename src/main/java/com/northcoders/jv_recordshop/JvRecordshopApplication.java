@@ -5,7 +5,7 @@ import com.northcoders.jv_recordshop.view.TerminalProgram;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-// TODO enum validation, and also reconfiguring tests to pass with DTO change
+// TODO enum validation on post and put, and also reconfiguring tests to pass with DTO change
 
 @SpringBootApplication
 public class JvRecordshopApplication {
