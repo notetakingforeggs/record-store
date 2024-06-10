@@ -29,30 +29,28 @@ public class TerminalProgram {
                     case 1 -> {
                         // view all records
                         HttpClient client = HttpClient.newHttpClient();
-
                         HttpRequest request = HttpRequest.newBuilder()
                                 .uri(URI.create("http://127.0.0.1:8080/api/v1/records"))
                                 .GET()
                                 .build();
-
                         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                         prettyPrint(response.body());
                     }
                     case 2 -> {
-
                         new SearchRecordsBy().searchRecordsBy(scanner);
                     }
                     case 3 -> {
+                        // Delete
+                        System.out.println("please input the ID of the record you would like to remove");
+                        int id = scanner.nextInt();
                         HttpClient client = HttpClient.newHttpClient();
-
                         HttpRequest request = HttpRequest.newBuilder()
-                                .uri(URI.create("http://127.0.0.1:8080/api/v1/records"))
+                                .uri(URI.create("http://127.0.0.1:8080/api/v1/records/delete/by?id=" + id))
                                 .DELETE()
                                 .build();
 
-                        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                        prettyPrint(response.body());
-                    }
+                       var response =  client.send(request, HttpResponse.BodyHandlers.ofString());
+                        System.out.println(response.body());                    }
                     case 4 -> {
                         System.out.println("Please paste into the terminal the JSON representation of the completed edit you would like to execute");
 
