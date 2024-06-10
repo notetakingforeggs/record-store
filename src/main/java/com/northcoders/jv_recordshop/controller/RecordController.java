@@ -1,17 +1,13 @@
 package com.northcoders.jv_recordshop.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.northcoders.jv_recordshop.DTO.AlbumDTO;
-import com.northcoders.jv_recordshop.mapper.ModelMapperConfig;
 import com.northcoders.jv_recordshop.model.Album;
-import com.northcoders.jv_recordshop.model.Genre;
 import com.northcoders.jv_recordshop.service.RecordService;
 //import jdk.swing.interop.SwingInterOpUtils;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +24,11 @@ public class RecordController {
     private RecordService recordService;
 
     @Autowired
-    private ModelMapper mapper;
+    private ModelMapper modelMapper;
 
     @GetMapping
     public ResponseEntity<List<Album>> getRecords() {
+        System.out.println("2");
         return new ResponseEntity<>(recordService.getAllAlbums(), HttpStatus.OK);
     }
 
@@ -112,14 +109,14 @@ public class RecordController {
         return new ResponseEntity<>("All albums deleted.", HttpStatus.OK);
     }
 
-    @
+
 
     public AlbumDTO convertAlbumToDTO(Album album) {
-        return mapper.map(album, AlbumDTO.class);
+        return modelMapper.map(album, AlbumDTO.class);
     }
 
     public Album convertAlbumDTOToAlbum(AlbumDTO albumDTO) {
-        return mapper.map(albumDTO, Album.class);
+        return modelMapper.map(albumDTO, Album.class);
     }
 
 

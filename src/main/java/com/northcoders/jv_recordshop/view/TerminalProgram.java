@@ -1,13 +1,19 @@
 package com.northcoders.jv_recordshop.view;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.northcoders.jv_recordshop.controller.RecordController;
+import com.northcoders.jv_recordshop.service.RecordServiceImpl;
 import nonapi.io.github.classgraph.json.JSONUtils;
+import org.apache.catalina.connector.Response;
 import org.apache.catalina.mapper.Mapper;
 
 import java.awt.*;
+import java.io.IOException;
 import java.net.URI;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -18,7 +24,7 @@ public class TerminalProgram {
         Scanner scanner = new Scanner(System.in);
 
         while (!ended) {
-            RecordController recordController = new RecordController();
+            RecordServiceImpl recordService = new RecordServiceImpl();
             new Menu().menu();
             int choice;
             try {
@@ -28,18 +34,28 @@ public class TerminalProgram {
                 switch (choice) {
                     case 1 -> {
                         // view all records
-                        recordController.getRecords().getBody().stream().forEach(System.out::println);
+                        HttpClient client = HttpClient.newHttpClient();
+
+                        HttpRequest request = HttpRequest.newBuilder()
+                                .uri(URI.create("http://127.0.0.1:8080/api/v1/records"))
+                                .GET()
+                                .build();
+
+                        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                        prettyPrint(response.body());
                     }
-                    case 2 -> {
-                        new SearchRecordsBy().searchRecordsBy(scanner, recordController);
-                    }
-                    case 3 -> {
-                        System.out.println("Please input the ID of the record to delete");
-                        String id = scanner.nextLine();
-                        recordController.deleteAlbumById(id);
-                    }
+//                    case 2 -> {
+//                        new SearchRecordsBy().searchRecordsBy(scanner, recordController);
+//                    }
+//                    case 3 -> {
+//                        System.out.println("Please input the ID of the record to delete");
+//                        String id = scanner.nextLine();
+//                        recordController.deleteAlbumById(id);
+//                    }
                     case 4 -> {
                         System.out.println("Please paste into the terminal the JSON representation of the completed edit you would like to execute");
+
+                        HttpClient client = HttpClient.newHttpClient();
                         StringBuilder requestBody = new StringBuilder();
                         while (scanner.hasNextLine()) {
                             requestBody.append(scanner.nextLine());
@@ -49,6 +65,8 @@ public class TerminalProgram {
                                 .uri(URI.create("http://127.0.0.1:8080/api/v1/records"))
                                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                                 .build();
+
+                        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     }
                     case 5 -> {
                         System.out.println("Please paste into the terminal the JSON representation of the record you would like to add to the catalogue. type 'end' to finish ");
@@ -85,8 +103,25 @@ public class TerminalProgram {
             } catch (InputMismatchException e) {
                 System.out.println("Please enter one of the options as its corresponding integer value.");
                 scanner.nextLine();
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
+
     }
+
+    public void prettyPrint(String string) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object jsonObject = null;
+        try {
+            jsonObject = objectMapper.readValue(string, Object.class);
+            String prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+            System.out.println(prettyJson);
+        } catch (JsonProcessingException e) {
+            System.out.println("issue parsing text as json");
+        }
+
+    }
+
 }
 

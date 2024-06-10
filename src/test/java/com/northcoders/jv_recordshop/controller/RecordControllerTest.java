@@ -1,5 +1,8 @@
 package com.northcoders.jv_recordshop.controller;
 
+
+// TODO DTO has broken a bunch of my tests. need to fix that
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -106,7 +109,8 @@ class RecordControllerTest {
     @DisplayName("POST addAlbum")
     void addAlbum() throws Exception {
         // Arrange
-        Album album = new Album();
+//        Album album = new Album();
+        Album album = new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1999, 1500L);
         when(mockRecordService.addAlbum(album)).thenReturn(album);
 
         // Act

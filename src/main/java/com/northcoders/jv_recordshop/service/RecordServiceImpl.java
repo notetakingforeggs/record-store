@@ -17,8 +17,10 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public List<Album> getAllAlbums() {
+        System.out.println("3");
         List<Album> albumList = new ArrayList<>();
         recordItemRepository.findAll().forEach(albumList::add);
+        System.out.println("4");
         return albumList;
     }
 
