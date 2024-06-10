@@ -1,9 +1,13 @@
 package com.northcoders.jv_recordshop.view;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.northcoders.jv_recordshop.controller.RecordController;
 import nonapi.io.github.classgraph.json.JSONUtils;
+import org.apache.catalina.mapper.Mapper;
 
 import java.awt.*;
+import java.net.URI;
+import java.net.http.HttpRequest;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,7 +18,7 @@ public class TerminalProgram {
         Scanner scanner = new Scanner(System.in);
 
         while (!ended) {
-             RecordController recordController = new RecordController();
+            RecordController recordController = new RecordController();
             new Menu().menu();
             int choice;
             try {
@@ -27,7 +31,7 @@ public class TerminalProgram {
                         recordController.getRecords().getBody().stream().forEach(System.out::println);
                     }
                     case 2 -> {
-                    new SearchRecordsBy().searchRecordsBy(scanner, recordController);
+                        new SearchRecordsBy().searchRecordsBy(scanner, recordController);
                     }
                     case 3 -> {
                         System.out.println("Please input the ID of the record to delete");
@@ -36,9 +40,36 @@ public class TerminalProgram {
                     }
                     case 4 -> {
                         System.out.println("Please paste into the terminal the JSON representation of the completed edit you would like to execute");
+                        StringBuilder requestBody = new StringBuilder();
+                        while (scanner.hasNextLine()) {
+                            requestBody.append(scanner.nextLine());
+                        }
 
+                        HttpRequest request = HttpRequest.newBuilder()
+                                .uri(URI.create("http://127.0.0.1:8080/api/v1/records"))
+                                .PUT(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                                .build();
                     }
                     case 5 -> {
+                        System.out.println("Please paste into the terminal the JSON representation of the record you would like to add to the catalogue. type 'end' to finish ");
+
+                        StringBuilder requestBody = new StringBuilder();
+                        while (scanner.hasNextLine()) {
+                            String line = scanner.nextLine();
+                            if (line.toUpperCase().equals("END")) {
+                                break;
+                            } else {
+                                requestBody.append(line);
+                            }
+
+                        }
+                        System.out.println(requestBody.toString());
+
+                        System.out.println("out of loop");
+                        HttpRequest request = HttpRequest.newBuilder()
+                                .uri(URI.create("http://127.0.0.1:8080/api/v1/records"))
+                                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                                .build();
 
                     }
 
