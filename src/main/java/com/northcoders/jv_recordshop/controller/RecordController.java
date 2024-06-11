@@ -23,7 +23,7 @@ public class RecordController {
     private RecordService recordService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping
     public ResponseEntity<List<Album>> getRecords() {

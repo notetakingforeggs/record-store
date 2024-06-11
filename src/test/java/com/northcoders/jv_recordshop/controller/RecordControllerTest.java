@@ -67,7 +67,7 @@ class RecordControllerTest {
         albumList.add(new Album(3L, "title3", "artist3", Genre.valueOf("JAZZ"), 1999, 1300L));
 
         when(mockRecordService.getAllAlbums()).thenReturn(albumList);
-        // horrific misstep of not noticing title is albumtitle debugging - keeping for future reference
+        // horrific misstep of not noticing title is albumTitle debugging - keeping for future reference
         MvcResult result = this.mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/records")).andReturn();
         System.out.println(result.getResponse().getContentAsString());
         // Act
@@ -113,12 +113,23 @@ class RecordControllerTest {
         Album album = new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1999, 1500L);
         when(mockRecordService.addAlbum(album)).thenReturn(album);
 
+        String json = mapper.writeValueAsString(album);
+        System.out.println(json);
+        // debugging by prints
+//        MvcResult result = this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/records").contentType()
+//
+//
+//                .andReturn();
+//        System.out.println(result.getResponse().getContentAsString());
+
         // Act
-        ResultActions resultActions = this.mockMvcController.perform((MockMvcRequestBuilders.post("/api/v1/records"))
+        ResultActions resultActions = this.mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/records")
                 // set content-type header as media type of request body is json
                 .contentType(MediaType.APPLICATION_JSON)
                 // convert album object into json string and set as body
-                .content(mapper.writeValueAsString(album)));
+                .content(json));
+
+
         // Assert
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$").value(album));
