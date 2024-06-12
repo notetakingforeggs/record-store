@@ -50,7 +50,8 @@ public class TerminalProgram {
                                 .build();
 
                        var response =  client.send(request, HttpResponse.BodyHandlers.ofString());
-                        System.out.println(response.body());                    }
+                        System.out.println(response.body());
+                    }
                     case 4 -> {
                         System.out.println("Please paste into the terminal the JSON representation of the completed edit you would like to execute");
 
@@ -69,6 +70,7 @@ public class TerminalProgram {
                     }
                     case 5 -> {
                         System.out.println("Please paste into the terminal the JSON representation of the record you would like to add to the catalogue. type 'end' to finish ");
+                        HttpClient client = HttpClient.newHttpClient();
 
                         StringBuilder requestBody = new StringBuilder();
                         while (scanner.hasNextLine()) {
@@ -80,12 +82,18 @@ public class TerminalProgram {
                             }
 
                         }
-                        System.out.println(requestBody.toString());
 
                         HttpRequest request = HttpRequest.newBuilder()
                                 .uri(URI.create("http://127.0.0.1:8080/api/v1/records"))
                                 .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                                .header("Content-Type", "application/json")
                                 .build();
+
+                        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                        System.out.println("Response status: " + response.statusCode());
+                        System.out.println("Response body: " + response.body());
+
 
                     }
 

@@ -38,12 +38,8 @@ public class RecordController {
                                           @RequestParam(required = false) String genre,
                                           @RequestParam(required = false) String title) {
         if (id != null) {
-            if (recordService.getAlbumById(Long.parseLong(id)) == null) {
-                return new ResponseEntity<>("Sorry, there are no albums with that ID - try again (numbers only)", HttpStatus.BAD_REQUEST);
-            } else {
-                return new ResponseEntity<>(recordService.getAlbumById(Long.parseLong(id)), HttpStatus.OK);
+            return new ResponseEntity<>(recordService.getAlbumById(id), HttpStatus.OK);
             }
-        }
 
         if (artist != null) {
             if (recordService.getAlbumsByArtist(artist).isEmpty()) {
@@ -70,8 +66,8 @@ public class RecordController {
 
 
     @PostMapping
-    public ResponseEntity<?> addAlbum(@Valid @RequestBody AlbumDTO albumDTO) {
-
+    public ResponseEntity<?> addAlbum(@RequestBody AlbumDTO albumDTO) {
+        System.out.println("passed parsing to DTO");
         Album album = convertAlbumDTOToAlbum(albumDTO);
         AlbumDTO returnDTO = convertAlbumToDTO(recordService.addAlbum(album));
         return new ResponseEntity<>(returnDTO, HttpStatus.CREATED);
@@ -93,7 +89,8 @@ public class RecordController {
     @DeleteMapping("/delete/by")
     public ResponseEntity<?> deleteAlbumById(@RequestParam String id) {
         try {
-            String albumName = recordService.getAlbumById(Long.parseLong(id)).getAlbumTitle();
+            //TODO integrate new get by id here
+            String albumName = recordService.getAlbumById(id).getAlbumTitle();
             recordService.deleteAlbumById(Long.parseLong(id));
             return new ResponseEntity<>(albumName + " has been deleted.", HttpStatus.OK);
         } catch (Exception e) {

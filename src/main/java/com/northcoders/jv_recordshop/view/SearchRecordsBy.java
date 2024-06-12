@@ -8,6 +8,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Scanner;
+import java.net.URLEncoder;
+
 
 public class SearchRecordsBy {
     public void searchRecordsBy(Scanner scanner) {
@@ -82,9 +84,10 @@ public class SearchRecordsBy {
     public void getRecordsBy(String searchingBy, String input) {
         try {
             HttpClient client = HttpClient.newHttpClient();
+            String encodedinput = URLEncoder.encode(input);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://127.0.0.1:8080/api/v1/records/by?" + searchingBy + "=" + input))
+                    .uri(URI.create("http://127.0.0.1:8080/api/v1/records/by?" + searchingBy + "=" + encodedinput))
                     .GET()
                     .build();
 

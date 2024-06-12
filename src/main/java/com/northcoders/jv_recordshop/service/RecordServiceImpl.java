@@ -3,8 +3,12 @@ package com.northcoders.jv_recordshop.service;
 import com.northcoders.jv_recordshop.model.Genre;
 import com.northcoders.jv_recordshop.repository.RecordItemRepository;
 import com.northcoders.jv_recordshop.model.Album;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +28,13 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public Album getAlbumById(Long ID) {
+    public Album getAlbumById(String ID) {
     try {
-        return recordItemRepository.findById(ID).get();
+        Long id = Long.parseLong(ID);
+        return recordItemRepository.findById(id).get();
+
     }catch (IllegalArgumentException | NoSuchElementException e){
-        return null;
+        throw new NumberFormatException ("Sorry, there is are no albums with that ID - try again (numbers only)");
     }
     }
 
