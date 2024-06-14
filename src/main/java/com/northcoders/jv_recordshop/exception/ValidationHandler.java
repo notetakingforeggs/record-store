@@ -1,6 +1,7 @@
 package com.northcoders.jv_recordshop.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -45,7 +46,7 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
 
     // handle general exceptions - an exception handler for all things that extend class exception
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request){
+    public ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "internal server error");
         error.put("message", ex.getMessage());
@@ -55,7 +56,7 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
 
     // handle non numbers being passed into number fields
     @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<Object> handleNumberFormatException(Exception ex, WebRequest request){
+    public ResponseEntity<Object> handleNumberFormatException(Exception ex, WebRequest request) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "number format error - are you sure you are inputting numbers?");
         error.put("message", ex.getMessage());
@@ -63,20 +64,28 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
     }
 
 
+    @ExceptionHandler(ConversionFailedException.class)
+    public ResponseEntity<String> handleConflict(RuntimeException ex) {
+        return new ResponseEntity<>("Invalid Genre", HttpStatus.BAD_REQUEST);
+    }
+}
+
 /*    @ExceptionHandler(HttpMessageNotReadableException.class)
     // going to return a response entity
-    public ResponseEntity<Object> handleValidationException(HttpMessageNotReadableException ex){
+    public ResponseEntity<Object> handleValidationException(HttpMessageNotReadableException ex) {
         String errorDeets = "";
         // if the httpmsgnotreadable exception is an instance of an invalid format exception
-        if (ex.getCause() instanceof InvalidFormatException){
+        if (ex.getCause() instanceof InvalidFormatException) {
             // cast it to that
             InvalidFormatException ifx = (InvalidFormatException) ex.getCause();
-
-            if (ifx.getTargetType() != null && ifx.getTargetType().isEnum(){
+            // if the target type of the exception is Enum, then respond with custom response for enums errors (which is genres in this case)
+            if (ifx.getTargetType() != null && ifx.getTargetType().isEnum()) {
                 errorDeets = "Invalid enum - Genre not acceptable";
             }
         }
+        return new ResponseEntity<>(errorDeets, HttpStatus.BAD_REQUEST);
     }*/
+
 
 //
 //    @RestControllerAdvice
@@ -97,4 +106,3 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
 //            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 //        }
 
-    }

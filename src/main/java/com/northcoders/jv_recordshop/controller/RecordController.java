@@ -69,6 +69,7 @@ public class RecordController {
 
     @PostMapping
     public ResponseEntity<?> addAlbum(@Valid @RequestBody AlbumDTO albumDTO) {
+        System.out.println("LOOOOO");
         Album album = convertAlbumDTOToAlbum(albumDTO);
         AlbumDTO returnDTO = convertAlbumToDTO(recordService.addAlbum(album));
         return new ResponseEntity<>(returnDTO, HttpStatus.CREATED);

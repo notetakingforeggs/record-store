@@ -141,7 +141,7 @@ class RecordControllerTest {
     void updateAlbum() throws Exception {
         // Arrange
         Album updatedAlbum = new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1999, 1500L);
-        when(mockRecordService.updateAlbum(updatedAlbum)).thenReturn(updatedAlbum);
+        when(mockRecordService.updateAlbum(updatedAlbum, updatedAlbum.getId())).thenReturn(updatedAlbum);
         // Act
         ResultActions resultActions = this.mockMvcController.perform((MockMvcRequestBuilders.put("/api/v1/records/update"))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -169,7 +169,8 @@ class RecordControllerTest {
         //Assert
         resultActions.andExpectAll(
                 (MockMvcResultMatchers.status().isOk()),
-                (MockMvcResultMatchers.content().string("title 2 has been deleted"))
+                (MockMvcResultMatchers.content().string("title2 has been deleted.clwa" +
+                        ""))
         );
     }
 }

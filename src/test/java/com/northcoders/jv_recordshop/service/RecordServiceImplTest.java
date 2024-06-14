@@ -89,7 +89,7 @@ class RecordServiceTest {
         when(recordItemRepository.save(newAlbum)).thenReturn(newAlbum);
 
         // Act
-        Album result = recordServiceImpl.updateAlbum(newAlbum);
+        Album result = recordServiceImpl.updateAlbum(newAlbum, newAlbum.getId());
 
         // Assert//
         assertThat(result).isEqualTo(newAlbum);
@@ -122,10 +122,10 @@ class RecordServiceTest {
         testOutput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1999, 1500L));
         testOutput.add(new Album(3L, "title3", "artist2", Genre.valueOf("JAZZ"), 1999, 1300L));
 
-        when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
+        when(recordItemRepository.findByartist("artist2")).thenReturn(testOutput);
         assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByArtist("artist2"));
 
-        verify(recordItemRepository, times(1)).findAll();
+        verify(recordItemRepository, times(1)).findByartist("artist2");
     }
 
 
@@ -141,10 +141,10 @@ class RecordServiceTest {
         testOutput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1999, 1500L));
         testOutput.add(new Album(3L, "title3", "artist3", Genre.valueOf("JAZZ"), 1999, 1300L));
 
-        when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
+        when(recordItemRepository.findByreleaseYear(1999)).thenReturn(testOutput);
         assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByYear(1999));
 
-        verify(recordItemRepository, times(1)).findAll();
+        verify(recordItemRepository, times(1)).findByreleaseYear(1999);
     }
 
 
@@ -162,10 +162,10 @@ class RecordServiceTest {
         testOutput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1901, 1500L));
         testOutput.add(new Album(3L, "title3", "artist3", Genre.valueOf("ROCK"), 1999, 1300L));
 
-        when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
-//        assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByGenre("ROCK"));
+        when(recordItemRepository.findBygenre(Genre.ROCK)).thenReturn(testOutput);
+        assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByGenre(Genre.ROCK));
 
-        verify(recordItemRepository, times(1)).findAll();
+        verify(recordItemRepository, times(1)).findBygenre(Genre.ROCK);
 
     }
 
@@ -182,11 +182,11 @@ class RecordServiceTest {
         testOutput.add(new Album(2L, "title2", "artist2", Genre.valueOf("ROCK"), 1901, 1500L));
         testOutput.add(new Album(3L, "title2", "artist3", Genre.valueOf("ROCK"), 1999, 1300L));
 
-        when(recordServiceImpl.getAllAlbums()).thenReturn(testInput);
+        when(recordItemRepository.findByalbumTitle(name)).thenReturn(testOutput);
 
         assertThat(testOutput).isEqualTo(recordServiceImpl.getAlbumsByTitle(name));
 
-        verify(recordItemRepository, times(1)).findAll();
+        verify(recordItemRepository, times(1)).findByalbumTitle(name);
 
     }
 

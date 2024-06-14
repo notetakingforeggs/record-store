@@ -1,7 +1,7 @@
 package com.northcoders.jv_recordshop.model;
 
 
-public enum Genre{
+public enum Genre {
     HIPHOP,
     ROCK,
     CLASSICAL,
