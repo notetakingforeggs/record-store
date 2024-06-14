@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -22,7 +25,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("POST", "/api/v1/auth/**").permitAll()
-                        .requestMatchers("/", "/error").permitAll());
+                        .requestMatchers("/", "/error").permitAll())
+                .formLogin(Customizer.withDefaults())
+                .oauth2Login(Customizer.withDefaults());
         return http.build();
     }
 }
