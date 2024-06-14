@@ -1,22 +1,11 @@
 package com.northcoders.jv_recordshop.DTO;
 
-import com.northcoders.jv_recordshop.model.Album;
 import com.northcoders.jv_recordshop.model.Genre;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import java.util.*;
-import java.time.*;
-
-import static java.time.Year.now;
-
 
 @Data
 public class AlbumDTO {
