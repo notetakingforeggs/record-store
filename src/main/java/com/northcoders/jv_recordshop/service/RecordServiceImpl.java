@@ -3,12 +3,10 @@ package com.northcoders.jv_recordshop.service;
 import com.northcoders.jv_recordshop.model.Genre;
 import com.northcoders.jv_recordshop.repository.RecordItemRepository;
 import com.northcoders.jv_recordshop.model.Album;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +25,6 @@ public class RecordServiceImpl implements RecordService {
         return albumList;
     }
 
-    @Override
-    public Album getAlbumById(String ID) {
-    try {
-        Long id = Long.parseLong(ID);
-        return recordItemRepository.findById(id).get();
-
-    }catch (IllegalArgumentException | NoSuchElementException e){
-        throw new NumberFormatException ("Sorry, there is are no albums with that ID - try again (numbers only)");
-    }
-    }
 
     @Override
     public Album addAlbum(Album album) {
@@ -44,59 +32,69 @@ public class RecordServiceImpl implements RecordService {
 
     }
 
+    @CacheEvict("albums")
     @Override
-    public void deleteAlbumById(Long Id) {
-        recordItemRepository.deleteById(Id);
+    public void deleteAlbumById(Long id) {
+        recordItemRepository.deleteById(id);
     }
 
+    @CacheEvict(value = "albums", key = "#id")
     @Override
-    public Album updateAlbum(Album album) {
-        if (recordItemRepository.findById(album.getId()).isPresent()) {
-            Album albumToUpdate = recordItemRepository.findById(album.getId()).get();
+    public Album updateAlbum(Album album, Long id) {
+        if (recordItemRepository.findById(id).isPresent()) {
+            Album albumToUpdate = recordItemRepository.findById(id).get();
             albumToUpdate.setPricePence(album.getPricePence());
             albumToUpdate.setAlbumTitle(album.getAlbumTitle());
             albumToUpdate.setGenre(album.getGenre());
             albumToUpdate.setReleaseYear(album.getReleaseYear());
             albumToUpdate.setArtist(album.getArtist());
-
             return recordItemRepository.save(albumToUpdate);
+
         } else return null;
     }
 
+
+    @Override
+    @Cacheable(value = "albums", key = "#id")
+    public Album getAlbumById(Long id) {
+        try {
+            Album returnAlbum = recordItemRepository.findById(id).get();
+            System.out.println("DB call Executed");
+            return returnAlbum;
+
+        } catch (IllegalArgumentException | NoSuchElementException e) {
+            throw new NumberFormatException("Sorry, there is are no albums with that ID - try again (numbers only)");
+        }
+    }
+
     //list all albums by a given artist
-@Override
+    @Override
     public List<Album> getAlbumsByArtist(String artist) {
-        return getAllAlbums().stream()
-                .filter(a -> a.getArtist().equals(artist))
-                .toList();
+        return recordItemRepository.findByartist(artist);
     }
 
     //list all albums by a given release year
     @Override
     public List<Album> getAlbumsByYear(int year) {
-        return getAllAlbums().stream()
-                .filter(a -> a.getReleaseYear() == year)
-                .toList();
+        return recordItemRepository.findByreleaseYear(year);
     }
 
     //list all albums by a given genre
     @Override
-    public List<Album> getAlbumsByGenre(String genre) {
-        return getAllAlbums().stream()
-                .filter(a -> a.getGenre().equals(Genre.valueOf(genre)))
-                .toList();
+    public List<Album> getAlbumsByGenre(Genre genre) {
+        return recordItemRepository.findBygenre(genre);
+
     }
 
     //get album information by album name
     @Override
     public List<Album> getAlbumsByTitle(String title) {
-        return getAllAlbums().stream()
-                .filter(s -> s.getAlbumTitle().equals(title))
-                .toList();
+        return recordItemRepository.findByalbumTitle(title);
     }
 
+    @CacheEvict("albums")
     @Override
-    public void deleteAllAlbums(){
+    public void deleteAllAlbums() {
         recordItemRepository.deleteAll();
     }
 

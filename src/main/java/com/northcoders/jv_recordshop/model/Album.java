@@ -15,8 +15,6 @@ import java.time.Year;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Builder
 
 public class Album {
