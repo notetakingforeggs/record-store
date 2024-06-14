@@ -1,4 +1,5 @@
 package com.northcoders.jv_recordshop.controller;
+
 import com.northcoders.jv_recordshop.DTO.UserDTO;
 import com.northcoders.jv_recordshop.model.UserEntity;
 import com.northcoders.jv_recordshop.security.PasswordUtils;
@@ -9,6 +10,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -20,13 +25,17 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    PasswordUtils passwordUtils;
+
     @PostMapping("/signup")
     public ResponseEntity<String> postUser(@Valid @RequestBody UserDTO user) {
         System.out.println("getting in");
-        try{SecurityValidation secVal = new SecurityValidation();
-        PasswordUtils passwordUtils = new PasswordUtils();
-
-
+        try {
+            SecurityValidation secVal = new SecurityValidation();
             String encryptedPass = passwordUtils.hashPassword(user.getPassword());
             UserEntity newUser = new UserEntity();
             newUser.setId(user.getId());
@@ -36,20 +45,27 @@ public class LoginController {
             userService.addUserEntity(newUser);
             return new ResponseEntity<>("success! new account created for " + user.getEmail(), HttpStatus.OK);
 
-        } catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>("registration failed", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> logIn(@RequestBody UserEntity user){
-        if (new UserServiceImpl().isValidPassword(user)){
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new ResponseEntity<>("User login success!", HttpStatus.OK);
+    }
+
+}
+
+
+/*    if (new UserServiceImpl().isValidPassword(user)){
             return new ResponseEntity<>("password is legit", HttpStatus.OK);
         }else{
             return new ResponseEntity<>("Invalid Password", HttpStatus.BAD_REQUEST);
         }
-    }
-}
+        @PostMapping("login")*/
 /*
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
