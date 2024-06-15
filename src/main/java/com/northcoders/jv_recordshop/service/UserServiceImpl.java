@@ -18,13 +18,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserByEmail(String email) {
-        return userEntityRepository.findByemail(email);
+        return userEntityRepository.findByusername(email);
     }
 
 
     public Boolean isValidPassword(UserEntity user) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.matches(user.getPassword(), getUserByEmail(user.getEmail()).getPassword());
+        return encoder.matches(user.getPassword(), getUserByEmail(user.getUsername()).getPassword());
     }
 
 }

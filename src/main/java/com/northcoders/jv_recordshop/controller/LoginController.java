@@ -5,7 +5,6 @@ import com.northcoders.jv_recordshop.model.UserEntity;
 import com.northcoders.jv_recordshop.security.PasswordUtils;
 import com.northcoders.jv_recordshop.security.SecurityValidation;
 import com.northcoders.jv_recordshop.service.UserService;
-import com.northcoders.jv_recordshop.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,35 +27,34 @@ public class LoginController {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    @Autowired
-    PasswordUtils passwordUtils;
+    // should password utils somehow be a bean and be autowired?
+
 
     @PostMapping("/signup")
     public ResponseEntity<String> postUser(@Valid @RequestBody UserDTO user) {
-        System.out.println("getting in");
         try {
-            SecurityValidation secVal = new SecurityValidation();
-            String encryptedPass = passwordUtils.hashPassword(user.getPassword());
+            String encryptedPass = new PasswordUtils().hashPassword(user.getPassword());
             UserEntity newUser = new UserEntity();
             newUser.setId(user.getId());
-            newUser.setEmail(user.getEmail());
+            newUser.setUsername(user.getUsername());
             newUser.setPassword(encryptedPass);
 
             userService.addUserEntity(newUser);
-            return new ResponseEntity<>("success! new account created for " + user.getEmail(), HttpStatus.OK);
+            return new ResponseEntity<>("success! new account created for " + user.getUsername(), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>("registration failed", HttpStatus.BAD_REQUEST);
         }
+
+
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
+    public ResponseEntity<String> login (@RequestBody UserDTO userDTO) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return new ResponseEntity<>("User login success!", HttpStatus.OK);
     }
-
 }
 
 
