@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 
 @Entity
 @Data
@@ -24,5 +26,4 @@ public class UserEntity {
 
     @Column
     String password;
-
 }
